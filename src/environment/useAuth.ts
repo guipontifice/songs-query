@@ -14,7 +14,7 @@ function useAuth({ code }: { code: string }) {
                 setExpiresIn(res.data.expiresIn);
                 window.history.pushState({}, '', '/')
             }).catch(() => {
-                window.location.href = '/';
+                // window.location.href = '/';
             })
     }, [code])
 

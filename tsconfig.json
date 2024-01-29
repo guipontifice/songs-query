@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "target": "ES2016",
-    "module": "NodeNext",
+    "target": "ESNext",
+    "module": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["ES2016", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
