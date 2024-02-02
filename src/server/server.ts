@@ -1,12 +1,15 @@
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+// import lyricsFinder from 'lyrics-finder'
 import bodyParser from 'body-parser';
 import spotifyWebApi from 'spotify-web-api-node';
+import main from 'lyrics-finder';
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/refresh', (req: Request, res: Response) => {
     const refreshToken = req.body.refreshToken;
     console.log('RefreshToken:', refreshToken)
@@ -52,5 +55,18 @@ app.post('/login', (req: Request, res: Response) => {
             console.log('err:', err)
             res.sendStatus(400)
         })
+})
+
+app.get('/lyrics', async (req: Request, res: Response) => {
+    try {
+        const lyrics = 
+        await main(req.query.artist as string, req.query.track as string) || 'No Lyrics Found';
+        res.json({ lyrics })
+        console.log('We are here')
+        console.log(`Artist: ${req.query.artist}, Track: ${req.query.track}`);
+    } catch (error) {
+        console.log('error: ', error)
+        res.sendStatus(400)
+    }
 })
 app.listen(3001)

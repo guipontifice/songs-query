@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "typeRoots": ["./types", "./node_modules/@types"],
     "esModuleInterop": true,
     "target": "ESNext",
     "module": "ESNext",

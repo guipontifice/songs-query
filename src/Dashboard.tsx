@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react'
-// import SpotifyPlayer from 'react-spotify-web-playback';
 import useAuth from './environment/useAuth.ts';
 import SpotifyWebApi from 'spotify-web-api-node';
 import TrackResult from './components/TrackResult.tsx';
 import Player from './components/Player.tsx';
+import axios from 'axios';
 
 interface IDashboardProps {
     code: string;
 }
 interface ITrackProps {
     uri: string,
+    artist?: string,
+    title?: string
 }
 
 const spotifyApi = new SpotifyWebApi({
@@ -21,11 +23,28 @@ const Dashboard = ({ code }: IDashboardProps) => {
     const [search, setSearch] = useState<string>('');
     const [searchResults, setSearchResults] = useState<any[] | undefined>([]);
     const [playingTrack, setPlayingTrack] = useState<ITrackProps>({ uri: '' });
+    const [lyrics, setLyrics] = useState<string>('');
     function chooseTrack(track: any) {
-        setPlayingTrack(track)
-        setSearch('')
+        setPlayingTrack(track);
+        setSearch('');
+        setLyrics('');
     }
     console.log(searchResults)
+
+    useEffect(() => {
+        if (!playingTrack) return;
+        axios
+            .get('http://localhost:3001/lyrics', {
+                params: {
+                    track: playingTrack.title,
+                    artist: playingTrack.artist
+                }
+            }).then(res => {
+                setLyrics(res.data.lyrics)
+                console.log('Lyrics:', res.data.lyrics)
+            })
+    }, [playingTrack]);
+
     useEffect(() => {
         if (!accessToken) return;
         spotifyApi.setAccessToken(accessToken)
@@ -37,6 +56,7 @@ const Dashboard = ({ code }: IDashboardProps) => {
 
         let cancel = false
         spotifyApi.searchTracks(search).then(res => {
+            if (cancel) return;
             setSearchResults(res.body.tracks?.items.map(track => {
                 const smallestAlbumImage = track.album.images.reduce(
                     (smallest?, image?) => {
@@ -66,6 +86,9 @@ const Dashboard = ({ code }: IDashboardProps) => {
                         key={track?.uri || ''}
                         chooseTrack={chooseTrack} />
                 ))}
+                {searchResults?.length === 0 && (
+                    <div>{lyrics}</div>
+                )}
             </div>
             <div className=''>
                 {/* <SpotifyPlayer

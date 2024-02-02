@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "typeRoots": ["./types", "./node_modules/@types"],
     "outDir": "build",
     "moduleResolution": "node",
     /* Visit https://aka.ms/tsconfig to read more about this file */

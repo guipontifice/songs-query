@@ -8,6 +8,7 @@ export default function Player({ accessToken, trackUri }: IPlayerProps) {
     const [play, setPlay] = useState<boolean>(false);
     useEffect(() => setPlay(true), [trackUri])
 
+    if (!accessToken) return null;  
     return <SpotifyPlayer
         token={accessToken}
         showSaveIcon
@@ -15,7 +16,7 @@ export default function Player({ accessToken, trackUri }: IPlayerProps) {
             if (!state.isPlaying) setPlay(false)
         }}
         play={play}
-        uris={trackUri}
+        uris={trackUri ? [trackUri] : []}
     />
 
 }
